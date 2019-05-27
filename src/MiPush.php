@@ -39,7 +39,7 @@ class MiPush
         return $sender->send($message1, $regId, $retries = 1)->getRaw();
     }
 
-    public static function sendBBSMessage($secret, $package, $regId, $title, $desc, $payload, $type)
+    public static function sendBBSMessage($secret, $package, $regId, $title, $desc, $payload, $type, $shareUid)
     {
         Constants::setPackage($package);
         Constants::setSecret($secret);
@@ -52,6 +52,7 @@ class MiPush
         $message1->payload($payload);
         $message1->extra(Builder::notifyForeground, 1);
         $message1->extra('type', $type);
+        $message1->extra('share_uid', $shareUid);
         $message1->notifyId(2);
         $message1->build();
         $targetMessage = new TargetedMessage();
