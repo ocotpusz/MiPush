@@ -61,6 +61,27 @@ class MiPush
         return $sender->send($message1, $regId, $retries = 1)->getRaw();
 
     }
+    public static function sendTaskNoticeMessage($secret, $package, $regId, $title, $desc, $payload, $type, $taskId)
+    {
+        Constants::setPackage($package);
+        Constants::setSecret($secret);
+        //常量设置必须在new Sender()方法之前调用
+        $sender = new Sender();
+        $message1 = new Builder();
+        $message1->title($title);
+        $message1->description($desc);
+        $message1->passThrough(0);
+        $message1->payload($payload);
+        $message1->extra(Builder::notifyForeground, 1);
+        $message1->extra('type', $type);
+        $message1->extra('task_id', $taskId);
+        $message1->notifyId(2);
+        $message1->build();
+        $targetMessage = new TargetedMessage();
+        $targetMessage->setTarget('alias1', TargetedMessage::TARGET_TYPE_REGID);
+        $targetMessage->setMessage($message1);
+        return $sender->send($message1, $regId, $retries = 1)->getRaw();
+    }
 }
 
 
